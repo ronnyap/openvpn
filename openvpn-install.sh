@@ -263,9 +263,9 @@ ca ca.crt
 cert server.crt
 key server.key
 dh dh.pem
-auth SHA512
+auth SHA256
 tls-auth ta.key 0
-topology subnet
+key-direction 0
 server 10.8.0.0 255.255.255.0
 ifconfig-pool-persist ipp.txt" > /etc/openvpn/server.conf
 	echo 'push "redirect-gateway def1 bypass-dhcp"' >> /etc/openvpn/server.conf
@@ -306,6 +306,9 @@ persist-key
 persist-tun
 status openvpn-status.log
 verb 3
+plugin /usr/lib/openvpn/openvpn-auth-pam.so login
+client-cert-not-required
+username-as-common-name
 crl-verify crl.pem" >> /etc/openvpn/server.conf
 	# Enable net.ipv4.ip_forward for the system
 	sed -i '/\<net.ipv4.ip_forward\>/c\net.ipv4.ip_forward=1' /etc/sysctl.conf
@@ -402,12 +405,13 @@ nobind
 persist-key
 persist-tun
 remote-cert-tls server
-auth SHA512
+auth SHA256
 cipher AES-256-CBC
 comp-lzo
 setenv opt block-outside-dns
 key-direction 1
-verb 3" > /etc/openvpn/client-common.txt
+verb 3
+auth-user-pass" > /etc/openvpn/client-common.txt
 	# Generates the custom client.ovpn
 	newclient "$CLIENT"
 	echo ""
