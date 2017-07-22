@@ -314,6 +314,10 @@ crl-verify crl.pem" >> /etc/openvpn/server.conf
 	sed -i '/\<net.ipv4.ip_forward\>/c\net.ipv4.ip_forward=1' /etc/sysctl.conf
 	if ! grep -q "\<net.ipv4.ip_forward\>" /etc/sysctl.conf; then
 		echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
+		echo 'net.ipv6.conf.all.disable_ipv6=1' >> /etc/sysctl.conf
+                echo 'net.ipv6.conf.default.disable_ipv6=1' >> /etc/sysctl.conf
+                echo 'net.ipv6.conf.lo.disable_ipv6=1' >> /etc/sysctl.conf
+	        echo 'net.ipv6.conf.eth0.disable_ipv6=1' >> /etc/sysctl.conf
 	fi
 	# Avoid an unneeded reboot
 	echo 1 > /proc/sys/net/ipv4/ip_forward
